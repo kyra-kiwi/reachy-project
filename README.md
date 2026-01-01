@@ -1,8 +1,14 @@
 # reachy-project
 - [reachy-project](#reachy-project)
+  - [Plan of action](#plan-of-action)
   - [References](#references)
 
 
+## Plan of action
+- Download app: https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/installation.md
+- Watch assembly video: https://www.youtube.com/watch?v=PC5Yx950nMY&t=1s
+- Assemble robot
+- Read and understand documentation from website (example projects)
 
 ## References
 
