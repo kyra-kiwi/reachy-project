@@ -12,7 +12,7 @@
 - Read and understand documentation from website (example projects)
 
 ## Timeline
-- 03/01/2025: Assembled Reachy and got Reachy Mini Control app working
+- 03/01/2025: Assembled Reachy and got [Reachy Mini Control app](https://huggingface.co/spaces/pollen-robotics/Reachy_Mini#/download) working
 
 ## References
 
