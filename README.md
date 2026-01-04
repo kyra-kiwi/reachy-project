@@ -2,6 +2,7 @@
 - [reachy-project](#reachy-project)
   - [Plan of action](#plan-of-action)
   - [Timeline](#timeline)
+  - [Getting a sample program running](#getting-a-sample-program-running)
   - [References](#references)
 
 
@@ -12,7 +13,15 @@
 - Read and understand documentation from website (example projects)
 
 ## Timeline
-- 03/01/2025: Assembled Reachy and got [Reachy Mini Control app](https://huggingface.co/spaces/pollen-robotics/Reachy_Mini#/download) working
+- 03/01/2026: Assembled Reachy and got [Reachy Mini Control app](https://huggingface.co/spaces/pollen-robotics/Reachy_Mini#/download) working
+- 04/01/2026: Played with Reachy Mini Control App and ran example code (antenna wiggle) in Visual Studio Code
+
+## Getting a sample program running
+I got the sample program from here https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/quickstart.md and ran the following command because I needed the `reachy_mini` library:
+
+```sh
+uv pip install "reachy-mini"`
+```
 
 ## References
 
