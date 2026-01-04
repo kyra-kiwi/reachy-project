@@ -17,11 +17,22 @@
 - 04/01/2026: Played with Reachy Mini Control App and ran example code (antenna wiggle) in Visual Studio Code
 
 ## Getting a sample program running
+First of all, I kept the Reachy Mini Control App running in the background and turned the robot on. It was connected to my mac using a USBC cable. I already had `uv` installed in my terminal.
+
 I got the sample program from here https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/quickstart.md and ran the following command because I needed the `reachy_mini` library:
 
 ```sh
 uv pip install "reachy-mini"`
 ```
+
+I ran the python command in the terminal. This is the response I got:
+
+```sh
+(reachy_mini_env) Kyra@mac reachy-project % python hello.py
+Connected to Reachy Mini! 
+Wiggling antennas...
+Done!
+``` 
 
 ## References
 
