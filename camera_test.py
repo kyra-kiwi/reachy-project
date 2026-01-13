@@ -14,6 +14,22 @@ if cap.isOpened():
    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
    # Reduce buffer size to minimize lag (get most recent frame)
    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+
+   # Grab and discard buffered frames to get the most recent one
+   cap.grab()
+   ret, frame = cap.retrieve()
+    
+   if not ret:
+        print('Did not work')
+        exit
+
+# Convert to grayscale for face detection
+   gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
   
+    # Display
+   cv2.imshow("Grayscale Image", gray)
+   cv2.waitKey(500)
+   cv2.destroyAllWindows()
+
 else:
    print("Could not open any webcam!")
