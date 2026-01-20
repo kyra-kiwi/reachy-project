@@ -7,12 +7,13 @@ look_at_image method to make the robot look at the specified point.
 Note: The daemon must be running before executing this script.o
 
 Original: https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/look_at_image.py
-:w
 """
 
 import argparse
 
 import cv2
+
+import numpy as np
 
 from reachy_mini import ReachyMini
 
@@ -43,7 +44,12 @@ def main(backend: str) -> None:
                     print("Failed to grab frame.")
                     continue
 
-                cv2.imshow("Reachy Mini Camera", frame)
+                brightness = 40   # try 20–60
+                contrast = 1.2   # 1.0 = no change
+
+                frame_bright = cv2.convertScaleAbs(frame, alpha=contrast, beta=brightness)
+
+                cv2.imshow("Reachy Mini Camera", frame_bright)
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     print("Exiting...")
                     break
