@@ -25,6 +25,11 @@ def click(event, x, y, flags, param):
         param["x"] = x
         param["y"] = y
 
+def change_brightness(input_frame):
+    brightness = 40   # try 20–60
+    contrast = 1.2   # 1.0 = no change
+
+    return cv2.convertScaleAbs(input_frame, alpha=contrast, beta=brightness)
 
 def main(backend: str) -> None:
     """Show the camera feed from Reachy Mini and make it look at clicked points."""
@@ -44,12 +49,7 @@ def main(backend: str) -> None:
                     print("Failed to grab frame.")
                     continue
 
-                brightness = 40   # try 20–60
-                contrast = 1.2   # 1.0 = no change
-
-                frame_bright = cv2.convertScaleAbs(frame, alpha=contrast, beta=brightness)
-
-                cv2.imshow("Reachy Mini Camera", frame_bright)
+                cv2.imshow("Reachy Mini Camera", change_brightness(frame))
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     print("Exiting...")
                     break
