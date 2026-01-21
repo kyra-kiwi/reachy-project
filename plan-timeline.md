@@ -1,8 +1,19 @@
 ## Plan of action
-- Download app: https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/installation.md
-- Watch assembly video: https://www.youtube.com/watch?v=PC5Yx950nMY&t=1s
-- Assemble robot
-- Read and understand documentation from website (example projects)
+- [x] Download app: https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/installation.md
+- [x] Watch assembly video: https://www.youtube.com/watch?v=PC5Yx950nMY&t=1s
+- [x] Assemble robot
+- [x] Read and understand documentation from website (example projects)
+- [x] Basic antenna wiggle program
+- [x] Head movement program
+- [x] 'Get frame' program from Mac webcam before starting with robot 
+- [x] 'Get video' program from Mac webcam
+- [x] 'Get frame' program from Reachy Mini camera
+- [x] 'Get video' program from Reachy Mini camera
+- [x] 'Look at point in image' program using Reachy Mini
+- [ ] Face detection program
+- [ ] Add greeting when face detected
+- [ ] Add ability to respond to speech
+
 
 ## Timeline
 - 31/12/2025: Created ReadMe
