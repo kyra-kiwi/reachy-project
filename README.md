@@ -1,11 +1,12 @@
 # reachy-project
 - [reachy-project](#reachy-project)
-  - [Getting a sample program running](#getting-a-sample-program-running)
+  - [Getting the first sample program running](#getting-the-first-sample-program-running)
+  - [Getting the Reachy Mini to look at a point in a frame](#getting-the-reachy-mini-to-look-at-a-point-in-a-frame)
   - [References](#references)
 
 If you want to follow the plan of action and timeline for my project, go to [plan-timeline.md](plan-timeline.md)
 
-## Getting a sample program running
+## Getting the first sample program running
 First of all, I kept the Reachy Mini Control App running in the background and turned the robot on. It was connected to my mac using a USBC cable. I already had `uv` installed in my terminal. To activate the reachy environment, I wrote:
 
 ```sh
@@ -22,20 +23,40 @@ Kyra@mac reachy-project % source reachy_mini_env/bin/activate
 I got the sample program from here https://github.com/pollen-robotics/reachy_mini/blob/develop/docs/SDK/quickstart.md and ran the following command because I needed the `reachy_mini` library:
 
 ```sh
-uv pip install "reachy-mini"`
+uv pip install "reachy-mini"
 ```
 
 I ran the python command in the terminal. This is the response I got:
 
 ```sh
-(reachy_mini_env) Kyra@mac reachy-project % python hello.py
+(reachy_mini_env) Kyra@mac reachy-project % python antenna-wiggle.py
 Connected to Reachy Mini! 
 Wiggling antennas...
 Done!
 ``` 
 
+## Getting the Reachy Mini to look at a point in a frame
+Make sure your environment is active:
+```sh
+source reachy_mini_env/bin/activate
+```
+
+Run the code following the command below:
+
+```sh
+(reachy_mini_env) Kyra@mac reachy-project % python look-at-point-in-image.py   
+Click on the image to make ReachyMini look at that point.
+Press 'q' to quit the camera feed.
+Exiting...
+```
+
+This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program ([look-at-point-in-image.py](look-at-point-in-image.py)) is from an example and not written by me.
+
+
+
 ## References
 
 - Official Standard Development Kit (SDK): https://github.com/pollen-robotics/reachy_mini?tab=readme-ov-file
+- Python SDK documentation: https://github.com/pollen-robotics/reachy_mini/blob/50923d19d12c13a66baff86cf29ac088d90b07db/docs/SDK/python-sdk.md
 - https://github.com/pollen-robotics/reachy_mini_conversation_app
 - Mirror test: https://youtu.be/gw2DShGlreQ?si=pziOKiugGwmuNSxI
