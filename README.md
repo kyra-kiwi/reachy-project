@@ -60,3 +60,4 @@ This will open a new window on your laptop showing a live image of what the robo
 - Python SDK documentation: https://github.com/pollen-robotics/reachy_mini/blob/50923d19d12c13a66baff86cf29ac088d90b07db/docs/SDK/python-sdk.md
 - https://github.com/pollen-robotics/reachy_mini_conversation_app
 - Mirror test: https://youtu.be/gw2DShGlreQ?si=pziOKiugGwmuNSxI
+- https://realpython.com/defining-your-own-python-function/
