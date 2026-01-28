@@ -17,7 +17,6 @@ import numpy as np
 
 from reachy_mini import ReachyMini
 
-
 def click(event, x, y, flags, param):
     """Handle mouse click events to get the coordinates of the click."""
     if event == cv2.EVENT_LBUTTONDOWN:
@@ -31,12 +30,12 @@ def change_brightness(input_frame):
 
     return cv2.convertScaleAbs(input_frame, alpha=contrast, beta=brightness)
 
-def detect_face(input_frame):
-    cv2.imshow("Reachy Mini Camera", input_frame)
+def detect_face(input_frame, face_cascade):
+    #cv2.imshow("Reachy Mini Camera", input_frame)
     gray = cv2.cvtColor(input_frame, cv2.COLOR_BGR2GRAY)
 
-    face_cascade = cv2.CascadeClassifier(
-    cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    #face_cascade = cv2.CascadeClassifier(
+    #cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     
     faces = face_cascade.detectMultiScale(
         gray,
@@ -62,6 +61,10 @@ def main(backend: str) -> None:
     cv2.namedWindow("Reachy Mini Camera")
     cv2.setMouseCallback("Reachy Mini Camera", click, param=state)
 
+    face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+)
+
     print("Click on the image to make ReachyMini draw rectangles on faces.")
     print("Press 'q' to quit the camera feed.")
     with ReachyMini(media_backend=backend) as reachy_mini:
@@ -73,15 +76,18 @@ def main(backend: str) -> None:
                     print("Failed to grab frame.")
                     continue
 
-                #cv2.imshow("Reachy Mini Camera", change_brightness(frame))
+                bright = change_brightness(frame)
+                cv2.imshow("Reachy Mini Camera", bright)
+
+                if state["just_clicked"]:
+                    print("Clicked")
+                    detect_face(bright, face_cascade)
+                    state["just_clicked"] = False
+
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     print("Exiting...")
                     break
 
-                if state["just_clicked"]:
-                    print("Clicked")
-                    detect_face(frame)
-                    state["just_clicked"] = False
         except KeyboardInterrupt:
             print("Interrupted. Closing viewer...")
         finally:
