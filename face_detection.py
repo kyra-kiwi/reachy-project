@@ -1,8 +1,6 @@
-"""Demonstrate how to make Reachy Mini look at a point in an image.
+"""This code is used to detect faces in a frame and draw rectangles around them.
 
-When you click on the image, Reachy Mini will look at the point you clicked on.
-It uses OpenCV to capture video from a camera and display it, and Reachy Mini's
-look_at_image method to make the robot look at the specified point.
+It uses OpenCV to capture video from a camera and display it.
 
 Note: The daemon must be running before executing this script.o
 
@@ -10,19 +8,8 @@ Original: https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/l
 """
 
 import argparse
-
 import cv2
-
-import numpy as np
-
 from reachy_mini import ReachyMini
-
-def click(event, x, y, flags, param):
-    """Handle mouse click events to get the coordinates of the click."""
-    if event == cv2.EVENT_LBUTTONDOWN:
-        param["just_clicked"] = True
-        param["x"] = x
-        param["y"] = y
 
 def change_brightness(input_frame):
     brightness = 40   # try 20–60
@@ -55,18 +42,13 @@ def detect_face(input_frame, face_cascade):
 
 
 def main(backend: str) -> None:
-    """Show the camera feed from Reachy Mini and make it look at clicked points."""
-    state = {"x": 0, "y": 0, "just_clicked": False}
-
+    
     cv2.namedWindow("Reachy Mini Camera")
-    cv2.setMouseCallback("Reachy Mini Camera", click, param=state)
 
     face_cascade = cv2.CascadeClassifier(
     cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
 )
 
-    print("Click on the image to make ReachyMini draw rectangles on faces.")
-    print("Press 'q' to quit the camera feed.")
     with ReachyMini(media_backend=backend) as reachy_mini:
         try:
             while True:
@@ -77,13 +59,10 @@ def main(backend: str) -> None:
                     continue
 
                 bright = change_brightness(frame)
-                cv2.imshow("Reachy Mini Camera", bright)
+                #cv2.imshow("Reachy Mini Camera", bright)
 
-                if state["just_clicked"]:
-                    print("Clicked")
-                    detect_face(bright, face_cascade)
-                    state["just_clicked"] = False
-
+                detect_face(bright, face_cascade)
+                
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     print("Exiting...")
                     break
@@ -96,7 +75,7 @@ def main(backend: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Display Reachy Mini's camera feed and make it look at clicked points."
+    description="Detect faces in a frame and draw rectangles around them."
     )
     parser.add_argument(
         "--backend",
