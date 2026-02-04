@@ -41,7 +41,7 @@ Make sure your environment is active:
 source reachy_mini_env/bin/activate
 ```
 
-Run the code following the command below:
+To run the python script, use the command below:
 
 ```sh
 (reachy_mini_env) Kyra@mac reachy-project % python look-at-point-in-image.py   
@@ -52,7 +52,29 @@ Exiting...
 
 This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program ([look-at-point-in-image.py](look-at-point-in-image.py)) is from an example and not written by me.
 
+## Installing Ollama and running models
 
+To install ollama, I ran the following command:
+```sh
+brew install ollama
+
+brew services start ollama
+```
+
+Now, to pull and run the phi3 model from Microsoft, use the following compands:
+```sh
+ollama pull phi3:mini
+
+ollama run phi3:mini
+```
+
+
+Once the AI model was running, this is how I said hello to the phi3:mini and its response:
+```sh
+Kyra@mac ~ % ollama run phi3:mini      
+⠸ >>> hello!
+Hello there! How can I assist you today?
+```
 
 ## References
 
