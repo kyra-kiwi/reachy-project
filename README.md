@@ -83,3 +83,4 @@ Hello there! How can I assist you today?
 - https://github.com/pollen-robotics/reachy_mini_conversation_app
 - Mirror test: https://youtu.be/gw2DShGlreQ?si=pziOKiugGwmuNSxI
 - https://realpython.com/defining-your-own-python-function/
+- https://github.com/dwain-barnes/reachy_mini_conversation_app_local
