@@ -13,7 +13,7 @@
     - [x] 'Get frame' program from Reachy Mini camera
     - [x] 'Get video' program from Reachy Mini camera
     - [x] 'Look at point in image' program using Reachy Mini
-    - [ ] Face detection program
+    - [x] Face detection program
 - [ ] Add greeting when face detected
 - [ ] Add ability to respond to speech
 - [ ] Reach Mini Audio
