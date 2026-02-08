@@ -17,7 +17,7 @@
 - [ ] Add greeting when face detected
 - [ ] Add ability to respond to speech
 - [ ] Reach Mini Audio
-    - [ ] Process audio from Reachy Mini
+    - [ ] Record audio from Reachy Mini
     - [ ] Convert audio to text
     - [ ] Use LLM to process/respond to text
     - [ ] Convert response text to audio
