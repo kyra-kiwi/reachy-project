@@ -5,11 +5,11 @@
 - [x] Read and understand documentation from website (example projects)
 - [x] Basic antenna wiggle program: [antenna-wiggle.py](antenna-wiggle.py)
 - [x] Head movement program: [head_movement.py](head_movement.py)
-- [ ] Camera/audio tasks before starting with robot
+- [x] Camera/audio tasks before starting with robot
     - [x] 'Get frame' program from Mac webcam
     - [x] 'Get video' program from Mac webcam
-    - [ ] Get and process audio from Mac mic
-- [ ] Reachy Mini Camera
+    - [ ] Get and process audio from Mac mic -- won't do, already doing with Reachy
+- [x] Reachy Mini Camera
     - [x] 'Get frame' program from Reachy Mini camera
     - [x] 'Get video' program from Reachy Mini camera
     - [x] 'Look at point in image' program using Reachy Mini
@@ -21,7 +21,7 @@
     - [ ] Convert audio to text
     - [ ] Use LLM to process/respond to text
     - [ ] Convert response text to audio
-    - [ ] Play back audio on Reachy Mini
+    - [x] Play back audio on Reachy Mini
 
 
 ## Timeline
