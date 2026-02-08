@@ -6,3 +6,4 @@ Instructions:
 - Work with Reachy Mini's Python SDK and libraries
 - Needs to work on a Macbook Air M series
 - All AI model usage must run locally
+- I'd like to stick to simpler programming because I don't know more advanced concepts like threading and asyncio
