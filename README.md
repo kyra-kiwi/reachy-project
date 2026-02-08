@@ -78,7 +78,7 @@ Hello there! How can I assist you today?
 
 ## Useful commands
 
-There were a lot of python files, so I moved the old ones to a ([starter-code](starter-code)). This is the command I used, taking ([antenna-wiggle.py](antenna-wiggle.py)) as an example:
+There were a lot of python files, so I moved the old ones to ([starter-code](starter-code)). This is the command I used, taking ([antenna-wiggle.py](antenna-wiggle.py)) as an example:
 ```sh
 git mv antenna-wiggle.py starter-code/
 ```
