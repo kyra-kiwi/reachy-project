@@ -33,4 +33,10 @@
 - 13/01/2026: Got webcam working in grayscale + head movement program
 - 17/01/2026: 'Get frame' and 'Get video' in colour programs
 - 20/01/2026: 'Look at image' program + brightness control
-- 21/01/2026: Updated tasks and readme + organised files
+- 21/01/2026: Updated tasks and readme + organised files + face detection program (rectangle drawing not working)
+- 28/01/2026: Fixed face detection program so rectangles are drawn on click
+- 01/02/2026: Made face detection continuous + started using Cursor
+Cursor
+- 04/02/2026: Updated readme + instructions for Cursor
+- 06/02/2026: Got Phi:3 model working
+- 08/02/2026: Added llama model (as well as Phi:3) + got Reachy sound playback working + reorganised files + updated readme
