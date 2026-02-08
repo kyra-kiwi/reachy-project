@@ -39,4 +39,4 @@
 Cursor
 - 04/02/2026: Updated readme + instructions for Cursor
 - 06/02/2026: Got Phi:3 model working
-- 08/02/2026: Added llama model (as well as Phi:3) + got Reachy sound playback working + reorganised files + updated readme
+- 08/02/2026: Added llama model (as well as Phi:3) + got Reachy sound playback working + reorganised files + updated readme + got Reachy recording working
