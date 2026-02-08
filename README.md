@@ -76,6 +76,13 @@ Kyra@mac ~ % ollama run phi3:mini
 Hello there! How can I assist you today?
 ```
 
+## Useful commands
+
+There were a lot of python files, so I moved the old ones to a ([starter-code](starter-code)). This is the command I used, taking ([antenna-wiggle.py](antenna-wiggle.py)) as an example:
+```sh
+git mv antenna-wiggle.py starter-code/
+```
+
 ## References
 
 - Official Standard Development Kit (SDK): https://github.com/pollen-robotics/reachy_mini?tab=readme-ov-file
@@ -84,3 +91,4 @@ Hello there! How can I assist you today?
 - Mirror test: https://youtu.be/gw2DShGlreQ?si=pziOKiugGwmuNSxI
 - https://realpython.com/defining-your-own-python-function/
 - https://github.com/dwain-barnes/reachy_mini_conversation_app_local
+- https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/debug/sound_play.py
