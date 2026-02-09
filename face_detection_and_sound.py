@@ -1,10 +1,14 @@
-"""This code is used to detect faces in a frame and draw rectangles around them.
+"""This code is used to detect new faces in a frame, draw rectangles around them
+ and play a sound when a new face is detected.
 
-It uses OpenCV to capture video from a camera and display it.
+It uses OpenCV to capture frames from the Reachy's camera and detect faces.
 
-Note: The daemon must be running before executing this script.o
+Note: The daemon must be running before running this code. If you don't know how
+to start the daemon, look at the README.md file.
 
-Original: https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/look_at_image.py
+Original references: 
+1) https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/look_at_image.py
+2) https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/debug/sound_play.py
 """
 
 import argparse
@@ -26,7 +30,6 @@ def play_sound(mini, audio_file, backend: str):
         level=logging.DEBUG, format="%(asctime)s [%(levelname)s] %(message)s"
     )
 
-    #with ReachyMini(log_level="DEBUG", media_backend=backend) as mini:
     data, samplerate_in = sf.read(INPUT_FILE, dtype="float32")
 
     if samplerate_in != mini.media.get_output_audio_samplerate():
@@ -59,11 +62,7 @@ def change_brightness(input_frame):
     return cv2.convertScaleAbs(input_frame, alpha=contrast, beta=brightness)
 
 def detect_face(input_frame, face_cascade):
-    #cv2.imshow("Reachy Mini Camera", input_frame)
     gray = cv2.cvtColor(input_frame, cv2.COLOR_BGR2GRAY)
-
-    #face_cascade = cv2.CascadeClassifier(
-    #cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     
     faces = face_cascade.detectMultiScale(
         gray,
@@ -74,11 +73,11 @@ def detect_face(input_frame, face_cascade):
 
     print("Faces detected",faces)
 
-    # 3) Draw rectangles around faces on the original frame
+    #Draw rectangles around faces on the original frame
     for (x, y, w, h) in faces:
         cv2.rectangle(input_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
-    # 4) Show the result
+    #Show the result
     cv2.imshow("Reachy Mini Camera", input_frame)
 
     return faces
@@ -104,7 +103,6 @@ def main(backend: str) -> None:
                     continue
 
                 bright = change_brightness(frame)
-                #cv2.imshow("Reachy Mini Camera", bright)
 
                 faces =detect_face(bright, face_cascade)
 
