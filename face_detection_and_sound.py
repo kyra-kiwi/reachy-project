@@ -4,7 +4,7 @@
 It uses OpenCV to capture frames from the Reachy's camera and detect faces.
 
 Note: The daemon must be running before running this code. If you don't know how
-to start the daemon, look at the README.md file.
+to start the daemon, look at the README.md file. The daemon is part of the Reachy Mini Control App.
 
 Original references: 
 1) https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/look_at_image.py
