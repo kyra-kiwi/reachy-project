@@ -2,12 +2,18 @@
 - [reachy-project](#reachy-project)
   - [Getting the first sample program running](#getting-the-first-sample-program-running)
   - [Getting the Reachy Mini to look at a point in a frame](#getting-the-reachy-mini-to-look-at-a-point-in-a-frame)
+  - [Detect face and play sound](#detect-face-and-play-sound)
+  - [Installing Ollama and running models](#installing-ollama-and-running-models)
+  - [Useful commands](#useful-commands)
   - [References](#references)
+
 
 If you want to follow the plan of action and timeline for my project, go to [plan-timeline.md](plan-timeline.md)
 
 ## Getting the first sample program running
-First of all, I kept the Reachy Mini Control App running in the background and turned the robot on. It was connected to my mac using a USBC cable. I already had `uv` installed in my terminal. To activate the reachy environment, I wrote:
+First of all, install the [Reachy Mini Control App](https://github.com/pollen-robotics/reachy-mini-desktop-app)
+
+I kept the Reachy Mini Control App running in the background and turned the robot on. It was connected to my mac using a USBC cable. I already had `uv` installed in my terminal. To activate the reachy environment, I wrote:
 
 ```sh
 source reachy_mini_env/bin/activate
@@ -36,6 +42,7 @@ Done!
 ``` 
 
 ## Getting the Reachy Mini to look at a point in a frame
+
 Make sure your environment is active:
 ```sh
 source reachy_mini_env/bin/activate
@@ -50,7 +57,13 @@ Press 'q' to quit the camera feed.
 Exiting...
 ```
 
-This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program ([look-at-point-in-image.py](look-at-point-in-image.py)) is from an example and not written by me.
+This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program ([look-at-point-in-image.py](look-at-point-in-image.py)) is partly from an example and not written by me.
+
+
+## Detect face and play sound
+
+This program [face_detection.py](face_detection.py) recognises and draws rectangles around faces. When a new face is detected, the Reachy Mini will play a sound.
+
 
 ## Installing Ollama and running models
 
