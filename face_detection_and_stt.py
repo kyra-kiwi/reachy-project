@@ -85,12 +85,16 @@ def collect_audio_chunk(mini, duration_seconds):
     """Collect audio samples for specified duration."""
     audio_samples = []
     t0 = time.time()
+    mini.media.start_recording()
     print("Collecting audio chunk...")
     while time.time() - t0 < duration_seconds:
         sample = mini.media.get_audio_sample()
         if sample is not None:
             audio_samples.append(sample)
+        else:
+            print("No audio data available yet...")
         time.sleep(0.1)  # Small delay to avoid busy waiting
+    mini.media.stop_recording()
     if audio_samples:
         return np.concatenate(audio_samples, axis=0)
     return None
@@ -179,11 +183,14 @@ def main(backend: str) -> None:
                     detect_voice_mode = True
                 
                 if detect_voice_mode == True:
-                    audio_chunk = collect_audio_chunk (reachy_mini, 5)
-                    transcribed_text = transcribe_audio_chunk_array(audio_chunk, 
-                        reachy_mini.media.get_input_audio_samplerate(), 
-                        whisper_model)
-                    print(transcribed_text)
+                    audio_chunk = collect_audio_chunk (reachy_mini, 2)
+                    if audio_chunk is not None:
+                        transcribed_text = transcribe_audio_chunk_array(audio_chunk, 
+                                reachy_mini.media.get_input_audio_samplerate(), 
+                                whisper_model)
+                        print(transcribed_text)
+                    else:
+                        print("No audio chunk available...")
 
 
                 if cv2.waitKey(1) & 0xFF == ord("q"):
