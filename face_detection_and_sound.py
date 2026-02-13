@@ -71,8 +71,6 @@ def detect_face(input_frame, face_cascade):
         minSize=(30, 30)   # ignore really small faces
     )
 
-    print("Faces detected",faces)
-
     #Draw rectangles around faces on the original frame
     for (x, y, w, h) in faces:
         cv2.rectangle(input_frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -108,7 +106,10 @@ def main(backend: str) -> None:
 
                 face_detected = len(faces) > 0
                 if face_detected and not face_detected_prev:
+                    print("Face detected!")
                     play_sound(reachy_mini, INPUT_FILE, backend)
+                #else:
+                #   print("No faces detected :(")
                 face_detected_prev = face_detected
 
                 if cv2.waitKey(1) & 0xFF == ord("q"):
@@ -119,7 +120,7 @@ def main(backend: str) -> None:
             print("Interrupted. Closing viewer...")
         finally:
             cv2.destroyAllWindows()
-
+    print("Done!")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
