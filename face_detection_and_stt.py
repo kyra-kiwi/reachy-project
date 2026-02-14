@@ -157,24 +157,41 @@ def main(backend: str) -> None:
 )
 
     face_detected_prev = False  # Track previous state
-    detect_face_mode = True
-    detect_voice_mode = False
+    current_mode = 'face'
 
     with ReachyMini(media_backend=backend) as reachy_mini:
         try:
             while True:
-                if detect_face_mode == True:
-
-
+                 # Check for key presses at the start of each loop iteration
+                key = cv2.waitKey(1) & 0xFF
+                
+                if key == ord("q"):
+                    print("Exiting...")
+                    break
+                elif key == ord("f"):
+                    # Switch to face detection mode
+                    if current_mode != "face":
+                        print("Switching to face detection mode...")
+                        if current_mode == "voice":
+                            reachy_mini.media.stop_recording()  # Stop audio recording
+                        current_mode = "face"
+                elif key == ord("v"):
+                    # Switch to voice/listening mode
+                    if current_mode != "voice":
+                        print("Switching to voice/listening mode...")
+                        reachy_mini.media.start_recording()  # Start audio recording
+                        current_mode = "voice"
+                
+                # Execute based on current mode
+                if current_mode == "face":
+                    # Face detection mode
                     frame = reachy_mini.media.get_frame()
-
                     if frame is None:
                         print("Failed to grab frame.")
                         continue
 
                     bright = change_brightness(frame)
-
-                    faces =detect_face(bright, face_cascade)
+                    faces = detect_face(bright, face_cascade)
 
                     face_detected = len(faces) > 0
                     if face_detected and not face_detected_prev:
@@ -183,10 +200,12 @@ def main(backend: str) -> None:
                     #else:
                     #   print("No faces detected :(")
                     face_detected_prev = face_detected
-                    detect_voice_mode = True
                 
-                if detect_voice_mode == True:
+                elif current_mode == "voice":
                     audio_chunk = collect_audio_chunk (reachy_mini, 10)
+                    if audio_chunk is None:
+                        # User pressed 'q' during collection
+                        break
                     if audio_chunk is not None:
                         transcribed_text = transcribe_audio_chunk_array(audio_chunk, 
                                 reachy_mini.media.get_input_audio_samplerate(), 
@@ -204,6 +223,8 @@ def main(backend: str) -> None:
         except KeyboardInterrupt:
             print("Interrupted. Closing viewer...")
         finally:
+            if current_mode == "voice":
+                reachy_mini.media.stop_recording()
             cv2.destroyAllWindows()
     print("Done!")
 
