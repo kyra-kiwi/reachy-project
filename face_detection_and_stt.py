@@ -81,7 +81,7 @@ def detect_face(input_frame, face_cascade):
 
     return faces
 
-def collect_audio_chunk(mini, duration_seconds):
+def collect_audio_chunk(mini, duration_seconds, current_mode):
     """Collect audio samples for specified duration."""
     audio_samples = []
     t0 = time.time()
@@ -91,6 +91,18 @@ def collect_audio_chunk(mini, duration_seconds):
         if cv2.waitKey(1) & 0xFF == ord("q"):
             mini.media.stop_recording()
             return None
+        key = cv2.waitKey(1) & 0xFF
+                
+        if key == ord("f"):
+            current_mode = 'face'
+        elif key == ord("v"):
+            current_mode = 'voice'
+        elif key == ord("q"):
+            mini.media.stop_recording()
+            # Default to face detection mode
+            current_mode = 'face'
+            return None, current_mode
+
         sample = mini.media.get_audio_sample()
         if sample is not None:
             audio_samples.append(sample)
@@ -99,8 +111,8 @@ def collect_audio_chunk(mini, duration_seconds):
         time.sleep(0.1)  # Small delay to avoid busy waiting
     mini.media.stop_recording()
     if audio_samples:
-        return np.concatenate(audio_samples, axis=0)
-    return None
+        return np.concatenate(audio_samples, axis=0), current_mode
+    return None, current_mode
 
 def transcribe_audio_chunk_array(audio_data, samplerate, whisper_model):
     """
@@ -202,7 +214,7 @@ def main(backend: str) -> None:
                     face_detected_prev = face_detected
                 
                 elif current_mode == "voice":
-                    audio_chunk = collect_audio_chunk (reachy_mini, 10)
+                    audio_chunk, current_mode = collect_audio_chunk (reachy_mini, 10, current_mode)
                     if audio_chunk is None:
                         # User pressed 'q' during collection
                         break
