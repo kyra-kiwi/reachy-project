@@ -22,11 +22,15 @@ import scipy
 import logging
 import whisper
 import ollama
+import wave
+import io
+from piper import PiperVoice
 
 logging.getLogger("httpcore").setLevel(logging.INFO)
 logging.getLogger("httpcore.http11").setLevel(logging.INFO)
 logging.getLogger("httpcore.connection").setLevel(logging.INFO)
 logging.getLogger("ollama").setLevel(logging.INFO)
+logging.getLogger("piper").setLevel(logging.WARNING)  # Suppress Piper TTS debug logs
 
 INPUT_FILE = os.path.join("./assets", "wake_up.wav")
 
@@ -199,11 +203,122 @@ def llama(transcribed_text, conversation_history):
     
     return assistant_response, conversation_history
 
+def generate_tts_audio_piper(text, voice_model):
+    """
+    Generate TTS audio using Piper TTS.
+    
+    Args:
+        text: Text to convert to speech
+        voice_model: PiperVoice instance (loaded model)
+    
+    Returns:
+        tuple: (audio_data as numpy array, sample_rate) or (None, None) if fails
+    """
+    if not text or not text.strip():
+        print("No text provided for TTS")
+        return None, None
+    
+    try:
+        print(f"Generating TTS audio for text: {text[:50]}...")  # Show first 50 chars
+        
+        # Create in-memory WAV file using BytesIO
+        audio_bytes = io.BytesIO()
+        
+        # Use wave.open with BytesIO to create a WAV file in memory
+        # Temporarily suppress debug logs during synthesis
+        root_logger = logging.getLogger()
+        old_level = root_logger.level
+        root_logger.setLevel(logging.WARNING)
+        try:
+            with wave.open(audio_bytes, "wb") as wav_file:
+                # Synthesize speech to the in-memory WAV file
+                voice_model.synthesize_wav(text, wav_file)
+        finally:
+            root_logger.setLevel(old_level)
+        
+        # Reset BytesIO to beginning so we can read it
+        audio_bytes.seek(0)
+        
+        # Read the audio data from memory using soundfile
+        # This returns a numpy array and sample rate
+        audio_data, sample_rate = sf.read(audio_bytes, dtype="float32")
+        
+        print(f"TTS audio generated: {len(audio_data)} samples at {sample_rate} Hz")
+        return audio_data, sample_rate
+        
+    except Exception as e:
+        print(f"Error generating TTS audio with Piper: {e}")
+        import traceback
+        traceback.print_exc()
+        return None, None
+
+def play_tts_audio(mini, audio_data, sample_rate):
+    """
+    Play TTS-generated audio through Reachy Mini speaker.
+    
+    Args:
+        mini: ReachyMini instance
+        audio_data: numpy array of audio samples (float32)
+        sample_rate: sample rate of the audio data
+    """
+    if audio_data is None:
+        print("No audio data to play")
+        return
+    
+    try:
+        # Get Reachy Mini's required sample rate
+        target_sample_rate = mini.media.get_output_audio_samplerate()
+        
+        # Resample if needed (same pattern as play_sound)
+        if sample_rate != target_sample_rate:
+            audio_data = scipy.signal.resample(
+                audio_data,
+                int(len(audio_data) * (target_sample_rate / sample_rate))
+            )
+        
+        # Convert to mono if stereo
+        if audio_data.ndim > 1:
+            audio_data = np.mean(audio_data, axis=1)
+        
+        # Ensure float32 format
+        if audio_data.dtype != np.float32:
+            audio_data = audio_data.astype(np.float32)
+        
+        # Normalize to [-1, 1] range if needed
+        max_val = np.max(np.abs(audio_data))
+        if max_val > 1.0:
+            audio_data = audio_data / max_val
+        
+        # Play audio (same pattern as play_sound)
+        mini.media.start_playing()
+        print("Playing TTS audio...")
+        chunk_size = 1024
+        for i in range(0, len(audio_data), chunk_size):
+            chunk = audio_data[i : i + chunk_size]
+            mini.media.push_audio_sample(chunk)
+            time.sleep(0.01)
+        
+        duration_seconds = len(audio_data) / target_sample_rate
+        print (f"Audio duration: {duration_seconds:.2f} seconds, waiting for playback to complete...")
+        time.sleep(duration_seconds + 0.5)
+        
+        mini.media.stop_playing()
+        print("TTS playback finished.")
+        
+    except Exception as e:
+        print(f"Error playing TTS audio: {e}")
+        mini.media.stop_playing()
+
 def main(backend: str) -> None:
     # Because I'm using an updating conversation history in more than one function, it is global
     global conversation_history
     # Choose from https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
     whisper_model = whisper.load_model("small.en")
+     # Load Piper TTS voice model (load once at startup for efficiency)
+    print("Loading Piper TTS voice model...")
+    piper_voice = PiperVoice.load("./en_GB-southern_english_female-low.onnx")
+    print("Piper TTS voice model loaded successfully!")
+
     cv2.namedWindow("Reachy Mini Camera")
 
     face_cascade = cv2.CascadeClassifier(
@@ -275,6 +390,18 @@ def main(backend: str) -> None:
                         llama_response, conversation_history = llama(transcribed_text, conversation_history)
                         
                         print_coloured(f"LLAMA response: {llama_response}", 'green')
+                        
+                        # Generate and play TTS audio using Piper
+                        print("Generating TTS audio with Piper...")
+                        audio_data, sample_rate = generate_tts_audio_piper(
+                            llama_response, 
+                            piper_voice  # Pass the loaded voice model
+                        )
+                        
+                        if audio_data is not None:
+                            play_tts_audio(reachy_mini, audio_data, sample_rate)
+                        else:
+                            print("TTS generation failed, skipping audio playback")
                     else:
                         print("No audio chunk available...")
                         break
