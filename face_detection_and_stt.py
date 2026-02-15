@@ -33,6 +33,19 @@ INPUT_FILE = os.path.join("./assets", "wake_up.wav")
 system_message = "You are a cute, friendly robot named Cleo. Keep your responses short and helpful with a maximum of 5 sentences. Be concise and conversational."
 conversation_history = [{'role': 'system', 'content': system_message}] 
 
+def print_coloured(text, color='cyan'):
+    """Print text in color. Colors: red, green, yellow, blue, magenta, cyan"""
+    colors = {
+        'red': '\033[91m',
+        'green': '\033[92m',
+        'yellow': '\033[93m',
+        'blue': '\033[94m',
+        'magenta': '\033[95m',
+        'cyan': '\033[96m',
+    }
+    reset = '\033[0m'
+    print(f"{colors.get(color, '')}{text}{reset}")
+
 def play_sound(mini, audio_file, backend: str):
     """Play a wav file by pushing samples to the audio device."""
 
@@ -256,10 +269,10 @@ def main(backend: str) -> None:
                         transcribed_text = transcribe_audio_chunk_array(audio_chunk, 
                                 reachy_mini.media.get_input_audio_samplerate(), 
                                 whisper_model)
-                        print(transcribed_text)
+                        print_coloured(f"Transcribed text: {transcribed_text}", 'red')
                         llama_response, conversation_history = llama(transcribed_text, conversation_history)
                         
-                        print(f"LLAMA response: {llama_response}")
+                        print_coloured(f"LLAMA response: {llama_response}", 'green')
                     else:
                         print("No audio chunk available...")
                         break
