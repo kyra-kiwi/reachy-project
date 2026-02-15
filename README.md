@@ -100,6 +100,8 @@ uv pip install piper-tts
 python -m piper.download_voices en_GB-southern_english_female-low
 ```
 
+Then, all you have to do is run ([face_detection_and_stt.py](face_detection_and_stt.py))
+
 
 ## Useful commands
 

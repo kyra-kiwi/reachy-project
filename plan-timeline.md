@@ -16,13 +16,13 @@
     - [x] Face detection program
 - [x] Add greeting when face detected
 - [x] Add ability to respond to speech
-- [ ] Reach Mini Audio
+- [x] Reach Mini Audio
     - [x] Record audio from Reachy Mini
     - [x] Convert audio to text
     - [x] Use LLM to process/respond to text
-    - [ ] Convert response text to audio
+    - [x] Convert response text to audio
         - [ ] Orpheus TTS -- tried but very hard to do, switched to Piper
-        - [ ] Piper TTS
+        - [x] Piper TTS
     - [x] Play back audio on Reachy Mini
 
 

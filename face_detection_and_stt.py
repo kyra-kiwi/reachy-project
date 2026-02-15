@@ -34,7 +34,7 @@ logging.getLogger("piper").setLevel(logging.WARNING)  # Suppress Piper TTS debug
 
 INPUT_FILE = os.path.join("./assets", "wake_up.wav")
 
-system_message = "You are a cute, friendly robot named Cleo. Keep your responses short and helpful with a maximum of 5 sentences. Be concise and conversational."
+system_message = "You are a cute, friendly robot named Cleo who responds with a touch of humour where appropriate. Keep your responses concise, conversational and helpful with a maximum of 2-3 sentences."
 conversation_history = [{'role': 'system', 'content': system_message}] 
 
 def print_coloured(text, color='cyan'):
