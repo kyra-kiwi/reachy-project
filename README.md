@@ -1,6 +1,7 @@
 # reachy-project
 - [reachy-project](#reachy-project)
-  - [Getting the first sample program running](#getting-the-first-sample-program-running)
+  - [Working with AI models](#working-with-ai-models)
+  - [Design](#design)
   - [Getting the Reachy Mini to look at a point in a frame](#getting-the-reachy-mini-to-look-at-a-point-in-a-frame)
   - [Detect face and play sound](#detect-face-and-play-sound)
   - [Installing Ollama and running models](#installing-ollama-and-running-models)
@@ -8,8 +9,81 @@
   - [Useful commands](#useful-commands)
   - [References](#references)
 
+The final version of my code is here [face_detection_and_chat.py](face_detection_and_chat.py). 
 
-If you want to follow the plan of action and timeline for my project, go to [plan-timeline.md](plan-timeline.md)
+It took a lot of experimentation to get to, all of which is now in the [starter-code](./starter-code) directory. I talk about some of it in the sections below.
+
+
+If you want to follow the plan of action and timeline for my project, go to [plan-timeline.md](plan-timeline.md). 
+
+## Working with AI models
+This was my first time coding and working with AI. It took quite a lot of work to get here, and I still have a long way to go. However, I'm very happy I was able to get my Reachy Mini (whose name is Cleo) to have basic conversations!
+
+To get my final code working, I needed:
+- sample code that showed me how to work with the Reachy Mini for audio and video, which is referenced in comments in my code
+- a library to recognise faces `cv2`
+- a way to download and run AI models that my Python application can use `ollama`
+- a model to convert speech to text `Whisper STT`
+- an AI model to process the text: Meta's `Llama 3.2-3B` or Microsoft's `Phi:3 Mini` (I used `Llama 3.2` in the end because it gave shorter responses)
+- a model to convert the response text to speech `Orpheus TTS` or `Piper TTS` (`Piper TTS` was simpler, so I used it)
+
+
+## Design
+```mermaid
+flowchart TD
+    Start([Start Program]) --> LoadModels[Load AI Models]
+    LoadModels --> LoadWhisper["Model 1: Microsoft <br/>Whisper STT<br/>Loaded at startup"]
+    LoadWhisper --> LoadPiper["Model 2: Piper TTS<br/>British voice<br/>Loaded at startup"]
+    LoadPiper --> LoadLlama["Model 3: OpenCV Face<br/> Cascade<br/>Loaded at startup"]
+    LoadLlama   --> LoadCascade[Model 4: Meta Llama 3.2-3B]
+    LoadCascade --> ConnectRobot[Connect to Reachy Mini]
+    ConnectRobot --> InitMode[Set Mode: 'face detection']
+    
+    InitMode --> MainLoop{Main Loop}
+    
+    MainLoop --> CheckMode{Current Mode?}
+    
+    CheckMode -->|'f' key| FaceMode[Face Detection Mode]
+    CheckMode -->|'v' key| VoiceMode[Voice/Listening Mode]
+    
+    FaceMode --> GetFrame[Get Frame from Camera]
+    GetFrame --> DetectFaces[Detect faces using OpenCV<br/>Cascade]
+    DetectFaces --> DrawRectangles[Draw Rectangles<br/>Around Faces]
+    DrawRectangles --> ShowFrame[Display Frame in Window]
+    ShowFrame --> CheckNewFace{New Face<br/>Detected?}
+    CheckNewFace -->|Yes| PlayWakeSound[Play wake_up.wav]
+    CheckNewFace -->|No| MainLoop
+    PlayWakeSound --> MainLoop
+    
+    VoiceMode --> CollectAudio[Collect Audio<br/>10 seconds duration]
+    CollectAudio --> Transcribe[Transcribe Audio<br/>using Whisper STT]
+    Transcribe --> SendToLLM[Send to Llama 3.2<br/>via Ollama]
+    SendToLLM --> GetResponse[Get LLM response<br/>Add to conversation_history]
+    GetResponse --> GenerateTTS[Generate audio<br/>using Piper TTS]
+    GenerateTTS --> PlayTTS[Play TTS Audio<br/>through Robot Speaker]
+    PlayTTS --> MainLoop
+    
+    MainLoop -->|'q' key| Exit([Exit Program])
+    Exit --> Cleanup[Cleanup:<br/>Stop Recording<br/>Close Windows]
+    Cleanup --> End([End])
+    
+    style Start fill:#90EE90
+    style End fill:#FFB6C1
+    style FaceMode fill:#87CEEB
+    style VoiceMode fill:#DDA0DD
+    style Exit fill:#FF6B6B
+    style LoadModels fill:#FFD700
+    style LoadWhisper fill:#FFF8DC
+    style LoadPiper fill:#FFF8DC
+    style LoadCascade fill:#FFF8DC
+```
+
+**Keyboard Controls:**
+- `f` = Switch to Face mode
+- `v` = Switch to Voice mode  
+- `x` = Clear conversation history
+- `q` = Quit program
+```
 
 ## Getting the first sample program running
 First of all, install the [Reachy Mini Control App](https://github.com/pollen-robotics/reachy-mini-desktop-app)
@@ -100,7 +174,7 @@ uv pip install piper-tts
 python -m piper.download_voices en_GB-southern_english_female-low
 ```
 
-Then, all you have to do is run ([face_detection_and_stt.py](face_detection_and_stt.py))
+Then, all you have to do is run ([piper_test.py](piper_test.py))
 
 
 ## Useful commands
