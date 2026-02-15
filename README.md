@@ -4,6 +4,7 @@
   - [Getting the Reachy Mini to look at a point in a frame](#getting-the-reachy-mini-to-look-at-a-point-in-a-frame)
   - [Detect face and play sound](#detect-face-and-play-sound)
   - [Installing Ollama and running models](#installing-ollama-and-running-models)
+  - [Text-to-speech](#text-to-speech)
   - [Useful commands](#useful-commands)
   - [References](#references)
 
@@ -88,6 +89,17 @@ Kyra@mac ~ % ollama run phi3:mini
 ⠸ >>> hello!
 Hello there! How can I assist you today?
 ```
+
+## Text-to-speech
+
+For this project, I am using Piper TTS model. To download Piper and voice packages, run:
+
+```sh
+uv pip install piper-tts   
+
+python -m piper.download_voices en_GB-southern_english_female-low
+```
+
 
 ## Useful commands
 
