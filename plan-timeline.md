@@ -15,11 +15,11 @@
     - [x] 'Look at point in image' program using Reachy Mini
     - [x] Face detection program
 - [x] Add greeting when face detected
-- [ ] Add ability to respond to speech
+- [x] Add ability to respond to speech
 - [ ] Reach Mini Audio
     - [x] Record audio from Reachy Mini
-    - [ ] Convert audio to text
-    - [ ] Use LLM to process/respond to text
+    - [x] Convert audio to text
+    - [x] Use LLM to process/respond to text
     - [ ] Convert response text to audio
     - [x] Play back audio on Reachy Mini
 
@@ -40,4 +40,6 @@ Cursor
 - 04/02/2026: Updated readme + instructions for Cursor
 - 06/02/2026: Got Phi:3 model working
 - 08/02/2026: Added llama model (as well as Phi:3) + got Reachy sound playback working + reorganised files + updated readme + got Reachy recording working
-- 13/02/2026: 
+- 13/02/2026: Got some audio detection working
+- 14/02/2026: Added keys to change modes since video and audio can't work at the same time in a single while loop
+- 15/02/2026: Got llama responses working for transcribed text + added coloured prints

@@ -105,3 +105,6 @@ git mv antenna-wiggle.py starter-code/
 - https://realpython.com/defining-your-own-python-function/
 - https://github.com/dwain-barnes/reachy_mini_conversation_app_local
 - https://github.com/pollen-robotics/reachy_mini/blob/develop/examples/debug/sound_play.py
+- Ollama Python documentation: https://github.com/ollama/ollama-python
+- Open AI Whisper models to choose from: https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
+- Llama model I'm using: https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_2/

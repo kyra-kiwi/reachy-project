@@ -200,7 +200,9 @@ def llama(transcribed_text, conversation_history):
     return assistant_response, conversation_history
 
 def main(backend: str) -> None:
+    # Because I'm using an updating conversation history in more than one function, it is global
     global conversation_history
+    # Choose from https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
     whisper_model = whisper.load_model("base.en")
     cv2.namedWindow("Reachy Mini Camera")
 
