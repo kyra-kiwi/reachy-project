@@ -21,8 +21,17 @@ import os
 import scipy
 import logging
 import whisper
+import ollama
+
+logging.getLogger("httpcore").setLevel(logging.INFO)
+logging.getLogger("httpcore.http11").setLevel(logging.INFO)
+logging.getLogger("httpcore.connection").setLevel(logging.INFO)
+logging.getLogger("ollama").setLevel(logging.INFO)
 
 INPUT_FILE = os.path.join("./assets", "wake_up.wav")
+
+system_message = "You are a cute, friendly robot named Cleo. Keep your responses short and helpful with a maximum of 5 sentences. Be concise and conversational."
+conversation_history = [{'role': 'system', 'content': system_message}] 
 
 def play_sound(mini, audio_file, backend: str):
     """Play a wav file by pushing samples to the audio device."""
@@ -90,13 +99,18 @@ def collect_audio_chunk(mini, duration_seconds, current_mode):
     while time.time() - t0 < duration_seconds:
         if cv2.waitKey(1) & 0xFF == ord("q"):
             mini.media.stop_recording()
-            return None
+            return None, current_mode
         key = cv2.waitKey(1) & 0xFF
                 
         if key == ord("f"):
             current_mode = 'face'
         elif key == ord("v"):
             current_mode = 'voice'
+        elif key == ord("x"):
+            conversation_history = [{'role': 'system', 'content': system_message}]
+            print("####################################################")
+            print("Conversation context cleared (system prompt preserved)")
+            print("####################################################")
         elif key == ord("q"):
             mini.media.stop_recording()
             # Default to face detection mode
@@ -160,7 +174,20 @@ def transcribe_audio_chunk_array(audio_data, samplerate, whisper_model):
         print(f"Transcription error: {e}")
         return ""
 
+def llama(transcribed_text, conversation_history):
+    # print(f"LLAMA:{transcribed_text}")
+    conversation_history.append({'role': 'user', 'content': transcribed_text})
+    response = ollama.chat(model='llama3.2', 
+        messages = conversation_history,
+        options= {'keep_alive': -1} # Keep the connection alive
+        )
+    assistant_response = response['message']['content']
+    conversation_history.append({'role': 'assistant', 'content': assistant_response})
+    
+    return assistant_response, conversation_history
+
 def main(backend: str) -> None:
+    global conversation_history
     whisper_model = whisper.load_model("base.en")
     cv2.namedWindow("Reachy Mini Camera")
 
@@ -194,6 +221,13 @@ def main(backend: str) -> None:
                         reachy_mini.media.start_recording()  # Start audio recording
                         current_mode = "voice"
                 
+                elif key == ord("x"):
+                    # Reset conversation history to system message only
+                    conversation_history = [{'role': 'system', 'content': system_message}]
+                    print("####################################################")
+                    print("Conversation context cleared (system prompt preserved)")
+                    print("####################################################")
+                
                 # Execute based on current mode
                 if current_mode == "face":
                     # Face detection mode
@@ -223,6 +257,9 @@ def main(backend: str) -> None:
                                 reachy_mini.media.get_input_audio_samplerate(), 
                                 whisper_model)
                         print(transcribed_text)
+                        llama_response, conversation_history = llama(transcribed_text, conversation_history)
+                        
+                        print(f"LLAMA response: {llama_response}")
                     else:
                         print("No audio chunk available...")
                         break
