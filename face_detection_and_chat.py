@@ -40,13 +40,25 @@ recorded_moves = RecordedMoves(EMOTIONS_DATASET)
 MOOD_TO_MOVE = {
     "happy": "cheerful1",
     "sad": "sad1",
+    "tired": "tired1",
+    "angry": "reprimand1",
+    "confused": "confused1",
+    "laughing": "laughing1",
+    "proud": "proud2",
+    "scared": "anxiety1",
+    "encouraging": "encouraging1",
+    "excited": "enthusiastic2",
+    "shocked": "fear1"
 }
-DEFAULT_EMOTION_MOVE = "attentive1"  # fallback if parsing fails or mood unknown
+DEFAULT_EMOTION_MOVE = "attentive2"  # fallback if parsing fails or mood unknown
 
 system_message = (
     "You are a cute, friendly robot named Cleo who responds with a touch of humour where appropriate. "
     "Keep your responses concise, conversational and helpful with a maximum of 2-3 sentences. "
-    "For each reply you must start with exactly one line containing only one word: either EMOTION: happy or EMOTION: sad "
+    "For each reply you must start with exactly one line containing only one word out of the following emotions "
+    "EMOTION: happy, EMOTION: sad, EMOTION: tired, EMOTION: angry, EMOTION: confused, "
+    "EMOTION: proud, EMOTION: scared, EMOTION: encouraging, EMOTION: excited, EMOTION: shocked, "
+     "or EMOTION: laughing "
     "(choose the one that best matches the tone of your response). Then leave a blank line, then your actual reply."
 )
 conversation_history = [{'role': 'system', 'content': system_message}] 
@@ -340,10 +352,10 @@ def parse_emotion_and_text(response_text):
     return move_name, text_for_tts
 
 def play_emotion(reachy_mini, recorded_moves, emotion_move_name):
-    """Play a recorded emotion move; fallback to attentive1 if name invalid."""
+    """Play a recorded emotion move; fallback to attentive2 if name invalid."""
     valid_moves = recorded_moves.list_moves()
     if emotion_move_name not in valid_moves:
-        emotion_move_name = "attentive1"
+        emotion_move_name = "attentive2"
     move = recorded_moves.get(emotion_move_name)
     reachy_mini.play_move(move, initial_goto_duration=1.0)
 
@@ -368,6 +380,8 @@ def main(backend: str) -> None:
 
     with ReachyMini(media_backend=backend) as reachy_mini:
         try:
+            # Play a move to start the conversation
+            play_emotion(reachy_mini, recorded_moves, "attentive2")
             while True:
                  # Check for key presses at the start of each loop iteration
                 key = cv2.waitKey(1) & 0xFF
