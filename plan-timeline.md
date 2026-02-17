@@ -16,6 +16,7 @@
     - [x] Face detection program
 - [x] Add greeting when face detected
 - [x] Add ability to respond to speech
+- [x] Emotions during conversations
 - [x] Reach Mini Audio
     - [x] Record audio from Reachy Mini
     - [x] Convert audio to text
@@ -45,3 +46,4 @@ Cursor
 - 13/02/2026: Got some audio detection working
 - 14/02/2026: Added keys to change modes since video and audio can't work at the same time in a single while loop
 - 15/02/2026: Got llama responses working for transcribed text + added coloured prints + got Piper TTS working (tried Orpheus but too hard)
+- 17/02/2026: Got 11 emotions working during conversations

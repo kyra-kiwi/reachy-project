@@ -57,7 +57,7 @@ system_message = (
     "Keep your responses concise, conversational and helpful with a maximum of 2-3 sentences. "
     "For each reply you must start with exactly one line containing only one word out of the following emotions "
     "EMOTION: happy, EMOTION: sad, EMOTION: tired, EMOTION: angry, EMOTION: confused, "
-    "EMOTION: proud, EMOTION: scared, EMOTION: encouraging, EMOTION: excited, EMOTION: shocked, "
+    "EMOTION: proud, EMOTION: scared, EMOTION: encouraging, EMOTION: excited, EMOTION: shocked "
      "or EMOTION: laughing "
     "(choose the one that best matches the tone of your response). Then leave a blank line, then your actual reply."
 )
