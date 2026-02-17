@@ -45,5 +45,5 @@ Cursor
 - 08/02/2026: Added llama model (as well as Phi:3) + got Reachy sound playback working + reorganised files + updated readme + got Reachy recording working
 - 13/02/2026: Got some audio detection working
 - 14/02/2026: Added keys to change modes since video and audio can't work at the same time in a single while loop
-- 15/02/2026: Got llama responses working for transcribed text + added coloured prints + got Piper TTS working (tried Orpheus but too hard)
-- 17/02/2026: Got 11 emotions working during conversations
+- 15/02/2026: Got llama responses working for transcribed text + added coloured prints + got Piper TTS working (tried Orpheus but too hard) + changed to better Whisper model (full chat mode also working)
+- 17/02/2026: Made code for testing emotions + made list of all 163 Reachy Mini emotions + got 11 emotions working during conversations
