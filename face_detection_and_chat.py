@@ -25,6 +25,7 @@ import ollama
 import wave
 import io
 from piper import PiperVoice
+from reachy_mini.motion.recorded_move import RecordedMoves
 
 logging.getLogger("httpcore").setLevel(logging.INFO)
 logging.getLogger("httpcore.http11").setLevel(logging.INFO)
@@ -33,8 +34,21 @@ logging.getLogger("ollama").setLevel(logging.INFO)
 logging.getLogger("piper").setLevel(logging.WARNING)  # Suppress Piper TTS debug logs
 
 INPUT_FILE = os.path.join("./assets", "wake_up.wav")
+EMOTIONS_DATASET = "pollen-robotics/reachy-mini-emotions-library"
+recorded_moves = RecordedMoves(EMOTIONS_DATASET)
+# Mood words the LLM can use -> emotions library move names
+MOOD_TO_MOVE = {
+    "happy": "cheerful1",
+    "sad": "sad1",
+}
+DEFAULT_EMOTION_MOVE = "attentive1"  # fallback if parsing fails or mood unknown
 
-system_message = "You are a cute, friendly robot named Cleo who responds with a touch of humour where appropriate. Keep your responses concise, conversational and helpful with a maximum of 2-3 sentences."
+system_message = (
+    "You are a cute, friendly robot named Cleo who responds with a touch of humour where appropriate. "
+    "Keep your responses concise, conversational and helpful with a maximum of 2-3 sentences. "
+    "For each reply you must start with exactly one line containing only one word: either EMOTION: happy or EMOTION: sad "
+    "(choose the one that best matches the tone of your response). Then leave a blank line, then your actual reply."
+)
 conversation_history = [{'role': 'system', 'content': system_message}] 
 
 def print_coloured(text, color='cyan'):
@@ -309,6 +323,30 @@ def play_tts_audio(mini, audio_data, sample_rate):
         print(f"Error playing TTS audio: {e}")
         mini.media.stop_playing()
 
+def parse_emotion_and_text(response_text):
+    """Parse 'EMOTION: happy' or 'EMOTION: sad' from first line; return (move_name, text_for_tts)."""
+    lines = response_text.strip().split("\n")
+    move_name = DEFAULT_EMOTION_MOVE
+    text_for_tts = response_text.strip()
+
+    if lines and lines[0].strip().upper().startswith("EMOTION:"):
+        mood_part = lines[0].strip()[8:].strip().lower()  # after "EMOTION:"
+        move_name = MOOD_TO_MOVE.get(mood_part, DEFAULT_EMOTION_MOVE)
+        # Rest of the message is what we speak (skip the first line, rejoin with newlines)
+        text_for_tts = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
+
+    if not text_for_tts:
+        text_for_tts = response_text.strip()  # fallback to full response
+    return move_name, text_for_tts
+
+def play_emotion(reachy_mini, recorded_moves, emotion_move_name):
+    """Play a recorded emotion move; fallback to attentive1 if name invalid."""
+    valid_moves = recorded_moves.list_moves()
+    if emotion_move_name not in valid_moves:
+        emotion_move_name = "attentive1"
+    move = recorded_moves.get(emotion_move_name)
+    reachy_mini.play_move(move, initial_goto_duration=1.0)
+
 def main(backend: str) -> None:
     # Because I'm using an updating conversation history in more than one function, it is global
     global conversation_history
@@ -390,11 +428,16 @@ def main(backend: str) -> None:
                         llama_response, conversation_history = llama(transcribed_text, conversation_history)
                         
                         print_coloured(f"LLAMA response: {llama_response}", 'green')
+
+                        # Parse emotion and text for TTS (happy/sad)
+                        emotion_move_name, text_for_tts = parse_emotion_and_text(llama_response)
+                        # Play emotion first, then speak
+                        play_emotion(reachy_mini, recorded_moves, emotion_move_name)
                         
                         # Generate and play TTS audio using Piper
                         print("Generating TTS audio with Piper...")
                         audio_data, sample_rate = generate_tts_audio_piper(
-                            llama_response, 
+                            text_for_tts, 
                             piper_voice  # Pass the loaded voice model
                         )
                         
