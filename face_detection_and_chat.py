@@ -1,5 +1,8 @@
-"""This code is used to detect new faces in a frame, draw rectangles around them
- and listen for a greeting when a new face is detected. 
+"""This code is used to detect new faces in a frame, draw rectangles around them, and
+play a sound when a new face is detected. In conversation mode ('v' key for voice), the
+robot listens to speech, converts it onto text using Whisper STT, sends the text to Llama 3.2,
+and converts the response to speech using Piper TTS. The robot also plays appropriate emotions
+before speaking.
 
 It uses OpenCV to capture frames from the Reachy's camera and detect faces.
 
@@ -335,20 +338,57 @@ def play_tts_audio(mini, audio_data, sample_rate):
         print(f"Error playing TTS audio: {e}")
         mini.media.stop_playing()
 
+def _normalize_mood_word(word: str) -> str:
+    """Lowercase and strip common punctuation for matching MOOD_TO_MOVE."""
+    if not word:
+        return ""
+    return word.lower().strip(".,!?;:\"'")
+
 def parse_emotion_and_text(response_text):
+    """Parse emotion from first line (EMOTION: x or plain word like Proud); 
+    return (move_name, text_for_tts)."""
     """Parse 'EMOTION: happy' or 'EMOTION: sad' from first line; return (move_name, text_for_tts)."""
     lines = response_text.strip().split("\n")
     move_name = DEFAULT_EMOTION_MOVE
     text_for_tts = response_text.strip()
 
-    if lines and lines[0].strip().upper().startswith("EMOTION:"):
-        mood_part = lines[0].strip()[8:].strip().lower()  # after "EMOTION:"
+    if not lines:
+        return move_name, text_for_tts
+
+    first_line = lines[0].strip()
+    mood_part = None
+    used_emotion_prefix = False
+
+    if first_line.upper().startswith("EMOTION:"):
+        raw = first_line[8:].strip()
+        mood_part = _normalize_mood_word(raw.split()[0] if raw.split() else raw) or _normalize_mood_word(raw)
+        if mood_part and mood_part not in MOOD_TO_MOVE:
+            mood_part = None
+        used_emotion_prefix = True
+
+    if mood_part is None and first_line:
+        first_word = first_line.split()[0] if first_line.split() else ""
+        first_word_clean = _normalize_mood_word(first_word)
+        if first_word_clean in MOOD_TO_MOVE:
+            mood_part = first_word_clean
+
+    if mood_part is not None:
         move_name = MOOD_TO_MOVE.get(mood_part, DEFAULT_EMOTION_MOVE)
-        # Rest of the message is what we speak (skip the first line, rejoin with newlines)
-        text_for_tts = "\n".join(lines[1:]).strip() if len(lines) > 1 else ""
+        if used_emotion_prefix:
+            text_for_tts = "\n".join(lines[1:]).strip()
+        else:
+            rest_of_first = " ".join(first_line.split()[1:]).strip()
+            text_for_tts = (rest_of_first + "\n" + "\n".join(lines[1:])).strip()
 
     if not text_for_tts:
-        text_for_tts = response_text.strip()  # fallback to full response
+        first_lower = first_line.lower()
+        first_word_clean = _normalize_mood_word(first_line.split()[0]) if first_line.split() else ""
+        is_emotion_line = (
+            first_line.upper().startswith("EMOTION:") or first_lower in MOOD_TO_MOVE or first_word_clean in MOOD_TO_MOVE
+        )
+        if not is_emotion_line:
+            text_for_tts = response_text.strip()
+
     return move_name, text_for_tts
 
 def play_emotion(reachy_mini, recorded_moves, emotion_move_name):
@@ -358,6 +398,7 @@ def play_emotion(reachy_mini, recorded_moves, emotion_move_name):
         emotion_move_name = "attentive2"
     move = recorded_moves.get(emotion_move_name)
     reachy_mini.play_move(move, initial_goto_duration=1.0)
+    time.sleep(1.0 + move.duration + 0.2)
 
 def main(backend: str) -> None:
     # Because I'm using an updating conversation history in more than one function, it is global
@@ -445,6 +486,7 @@ def main(backend: str) -> None:
 
                         # Parse emotion and text for TTS (happy/sad)
                         emotion_move_name, text_for_tts = parse_emotion_and_text(llama_response)
+                        print_coloured(f"Parsed emotion move: {emotion_move_name!r} (first line: {llama_response.strip().split(chr(10))[0][:50]!r})", 'yellow')
                         # Play emotion first, then speak
                         play_emotion(reachy_mini, recorded_moves, emotion_move_name)
                         
