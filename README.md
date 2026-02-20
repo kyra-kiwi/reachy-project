@@ -16,6 +16,9 @@ It took a lot of experimentation to get to, all of which is now in the [starter-
 
 If you want to follow the plan of action and timeline for my project, go to [plan-timeline.md](plan-timeline.md). 
 
+## Demo video
+[iMovie Library.imovielibrary.zip](https://github.com/user-attachments/files/25443894/iMovie.Library.imovielibrary.zip)
+
 ## Working with AI models
 This was my first time coding and working with AI. It took quite a lot of work to get here, and I still have a long way to go. However, I'm very happy I was able to get my Reachy Mini (whose name is Cleo) to have basic conversations!
 
