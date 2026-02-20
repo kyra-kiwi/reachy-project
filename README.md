@@ -9,6 +9,8 @@
   - [Useful commands](#useful-commands)
   - [References](#references)
 
+I have a video recording of my demo, which you can download and view [demo-video](./output.mp4)
+
 The final version of my code is here [face_detection_and_chat.py](face_detection_and_chat.py). 
 
 It took a lot of experimentation to get to, all of which is now in the [starter-code](./starter-code) directory. I talk about some of it in the sections below.
