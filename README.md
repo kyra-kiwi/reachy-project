@@ -199,3 +199,7 @@ git mv antenna-wiggle.py starter-code/
 - Ollama Python documentation: https://github.com/ollama/ollama-python
 - Open AI Whisper models to choose from: https://github.com/openai/whisper?tab=readme-ov-file#available-models-and-languages
 - Llama model I'm using: https://www.llama.com/docs/model-cards-and-prompt-formats/llama3_2/
+- Piper voices: https://huggingface.co/rhasspy/piper-voices/tree/main/en/en_GB/southern_english_female/low 
+- Installing Piper: https://github.com/OHF-Voice/piper1-gpl/blob/main/docs/API_PYTHON.md
+- Example on how to use Reachy Mini recorded moves: https://huggingface.co/docs/reachy_mini/en/examples/recorded_moves
+- Reachy peekaboo app example: https://huggingface.co/spaces/SathvickN/reachy_basic_peek_a_boo/blob/main/reachy_basic_peek_a_boo/main.py
