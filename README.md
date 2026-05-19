@@ -86,7 +86,7 @@ flowchart TD
 - `v` = Switch to Voice mode  
 - `x` = Clear conversation history
 - `q` = Quit program
-```
+
 
 ## Getting the first sample program running
 First of all, install the [Reachy Mini Control App](https://github.com/pollen-robotics/reachy-mini-desktop-app)
@@ -135,7 +135,7 @@ Press 'q' to quit the camera feed.
 Exiting...
 ```
 
-This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program ([look-at-point-in-image.py](look-at-point-in-image.py)) is partly from an example and not written by me.
+This will open a new window on your laptop showing a live image of what the robot camera sees. Note that most of the code in this program [look-at-point-in-image.py](look-at-point-in-image.py) is partly from an example and not written by me.
 
 
 ## Detect face and play sound
@@ -145,7 +145,7 @@ This program [face_detection.py](face_detection.py) recognises and draws rectang
 
 ## Installing Ollama and running models
 
-To install ollama, I ran the following command:
+To install ollama, I ran the following commands:
 ```sh
 brew install ollama
 
@@ -177,12 +177,12 @@ uv pip install piper-tts
 python -m piper.download_voices en_GB-southern_english_female-low
 ```
 
-Then, all you have to do is run ([piper_test.py](piper_test.py))
+Then, all you have to do is run [piper_test.py](piper_test.py)
 
 
 ## Useful commands
 
-There were a lot of python files, so I moved the old ones to ([starter-code](starter-code)). This is the command I used, taking ([antenna-wiggle.py](antenna-wiggle.py)) as an example:
+There were a lot of python files, so I moved the old ones to [starter-code](starter-code). This is the command I used, taking [antenna-wiggle.py](antenna-wiggle.py) as an example:
 ```sh
 git mv antenna-wiggle.py starter-code/
 ```
