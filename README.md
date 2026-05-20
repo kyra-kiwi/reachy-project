@@ -2,6 +2,8 @@
 - [reachy-project](#reachy-project)
   - [Working with AI models](#working-with-ai-models)
   - [Design](#design)
+  - [Getting the first sample program running](#getting-the-first-sample-program-running)
+  - [First set-up](#first-set-up)
   - [Getting the Reachy Mini to look at a point in a frame](#getting-the-reachy-mini-to-look-at-a-point-in-a-frame)
   - [Detect face and play sound](#detect-face-and-play-sound)
   - [Installing Ollama and running models](#installing-ollama-and-running-models)
@@ -118,6 +120,38 @@ Connected to Reachy Mini!
 Wiggling antennas...
 Done!
 ``` 
+
+## First set-up
+
+To make a new uv environment:
+```sh
+uv venv
+```
+
+To download opencv, I ran the following command:
+```sh
+uv pip install opencv-python
+```
+
+Soundfile:
+```sh
+uv pip install soundfile
+```
+
+Whisper:
+```sh
+uv pip install openai-whisper
+```
+
+Ollama:
+```sh
+uv pip install ollama
+```
+
+Piper:
+```sh
+uv pip install piper-tts
+```
 
 ## Getting the Reachy Mini to look at a point in a frame
 
