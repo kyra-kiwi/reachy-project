@@ -19,6 +19,7 @@ import cv2
 from reachy_mini import ReachyMini
 import time
 import numpy as np
+import sounddevice as sd
 import soundfile as sf
 import os
 import scipy
@@ -171,6 +172,22 @@ def collect_audio_chunk(mini, duration_seconds, current_mode):
     if audio_samples:
         return np.concatenate(audio_samples, axis=0), current_mode
     return None, current_mode
+
+def collect_sd_audio_chunk(mini, duration_seconds, current_mode):
+    DEVICE_ID = 0
+    FS = 16000
+
+    audio = sd.rec(
+        int(duration_seconds * FS),
+        samplerate=FS,
+        channels=1,
+        dtype='int16',
+        device=DEVICE_ID
+    )
+
+    sd.wait()
+
+    return np.concatenate(audio, axis=0), current_mode
 
 def transcribe_audio_chunk_array(audio_data, samplerate, whisper_model):
     """
@@ -417,7 +434,14 @@ def main(backend: str) -> None:
     face_detected_prev = False  # Track previous state
     current_mode = 'face'
 
-    with ReachyMini(media_backend=backend) as reachy_mini:
+    #with ReachyMini(media_backend=backend) as reachy_mini:
+    with ReachyMini(
+    connection_mode="auto",
+    spawn_daemon=True,
+    localhost_only=True,
+    #media_backend="default",
+    media_backend="local",
+    ) as reachy_mini:
         try:
             # Play a move to start the conversation
             play_emotion(reachy_mini, recorded_moves, "attentive2")
@@ -469,7 +493,7 @@ def main(backend: str) -> None:
                     face_detected_prev = face_detected
                 
                 elif current_mode == "voice":
-                    audio_chunk, current_mode = collect_audio_chunk (reachy_mini, 10, current_mode)
+                    audio_chunk, current_mode = collect_sd_audio_chunk (reachy_mini, 10, current_mode)
                     if audio_chunk is None:
                         # User pressed 'q' during collection
                         break
@@ -527,6 +551,6 @@ if __name__ == "__main__":
         default="default",
         help="Media backend to use.",
     )
-
+ 
     args = parser.parse_args()
     main(backend=args.backend)
